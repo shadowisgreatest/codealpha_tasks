@@ -1,0 +1,100 @@
+Requirements Analysis
+
+✅ 1. Abstraction & Modularization
+STATUS: FULLY MEETS
+
+Backend Modularization:
+
+├── controllers/  (Business logic abstraction)
+│   ├── authController.js
+│   ├── productController.js
+│   ├── categoryController.js
+│   └── userController.js
+├── routes/      (API endpoint abstraction)
+│   ├── authRoutes.js
+│   ├── productRoutes.js
+│   ├── categoryRoutes.js
+│   └── userRoutes.js
+├── middleware/  (Cross-cutting concerns)
+│   └── authMiddleware.js
+└── config/      (Configuration abstraction)
+    └── db.js
+Frontend Modularization:
+
+├── components/  (Reusable UI components)
+│   ├── Header/
+│   ├── Footer/
+│   ├── ProductCard/
+│   └── Loader/
+├── pages/      (Page-level abstraction)
+├── context/    (State management abstraction)
+└── utils/      (Helper functions)
+Evidence: Clear separation of concerns with MVC-like pattern on backend and component-based architecture on frontend.
+
+✅ 2. Encapsulation
+STATUS: FULLY MEETS
+
+Backend Encapsulation:
+
+✅ Database credentials hidden in `.env` file
+✅ JWT secret encapsulated
+✅ Password hashing logic encapsulated in authController
+✅ Database connection logic encapsulated in `db.js`
+✅ Authentication logic encapsulated in middleware
+Frontend Encapsulation:
+
+✅ API base URL in environment variables
+✅ Cart logic encapsulated in CartContext
+✅ Component state managed internally
+✅ Private data protected through authentication
+Code Evidence:
+
+// authController.js - Password encapsulation
+const hashedPassword = await bcrypt.hash(password, 10);
+
+// authMiddleware.js - Token verification encapsulated
+const token = req.headers.authorization?.split(' ')[1];
+const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+✅ 3. Low Coupling
+STATUS: FULLY MEETS
+
+Evidence of Loose Coupling:
+
+Database Layer → Controllers:
+Controllers use MySQL queries but aren't tightly bound to MySQL
+Can switch databases with minimal changes
+Routes → Controllers:
+Routes only call controller functions
+Controller implementation can change without affecting routes
+Frontend → Backend:
+Communication only through REST API
+Frontend doesn't know backend implementation details
+Can replace backend entirely if API contract maintained
+Components → Context:
+Components consume context but don't depend on implementation
+CartContext can be refactored without changing components
+Example:
+
+// Low coupling: Route doesn't know controller implementation
+router.post('/register', authController.register);
+
+// Component doesn't know API implementation
+const response = await fetch(`${API_URL}/auth/login`, {...});
+
+✅ 4. High Cohesion
+STATUS: FULLY MEETS
+
+Backend Cohesion:
+✅ `authController.js` - Only handles authentication (register, login, profile)
+✅ `productController.js` - Only handles product operations (CRUD)
+✅ `categoryController.js` - Only handles category operations
+✅ `authMiddleware.js` - Only handles token verification
+✅ `db.js` - Only handles database connection
+
+Frontend Cohesion:
+✅ `CartContext.js` - Only manages cart state and operations
+✅ `ProductCard.jsx` - Only displays product information
+✅ `Header.jsx` - Only handles navigation
+✅ `Login.jsx` - Only handles login functionality
+Each module has a single, well-defined responsibility.
